@@ -1,0 +1,57 @@
+<body>
+	<div class="container">
+		{{> header}}
+
+			<div>
+			{{#if currentUser}}
+				{{> main}}
+			{{else}}
+				{{> login_form}}
+			{{/if}}
+			</div>
+	</div>
+
+	{{> footer}}
+
+
+</body>
+
+<template name="header">
+	<div class="page-header">
+		<h1>Registration Form</h1>
+	</div>
+</template>
+
+<template name="footer">
+	<div id="footer">
+		<div class="container">
+	  		<p class="text-muted">
+	     		<small>&copy / <a href="mailto:arun@zechariah.net">ajz design</a></small>
+	    	</p>
+	  	</div>
+  	</div>
+</template>
+
+<template name="login_form">
+	<div class="form-signin">
+		{{loginButtons}}
+	</div>
+</template>
+
+<template name="main">
+
+	<div class="pull-right">
+		{{loginButtons align="right"}}
+	</div>
+	{{#if email_verified}}
+		<p class="lead">Main template</p>
+		{{> regn_tabs}}
+	{{else}}
+	Verified : {{email_verified}}
+	<p class="lead">Please check your email and verify your identity. Thanks.</p>
+	{{/if}}
+</template>
+
+<template name="regn_tabs">
+	Registration tabs
+</template>
