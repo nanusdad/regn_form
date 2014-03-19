@@ -149,7 +149,7 @@ Template.survey_tabs.rendered = function() {
 };
 
 Template.survey_tabs.events({
-	'click #submit': function() {
+	'click .section-submit': function() {
 		var values = {};
 
 		function logArrayElements(element, index, array) {
