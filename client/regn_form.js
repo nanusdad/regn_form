@@ -146,10 +146,18 @@ Template.survey_tabs.rendered = function() {
 	$('#survey_content div:first').addClass('in active');
 	$('#section_tabs li:first').addClass('active');
 	$('#section_content div:first').addClass('in active');
+		// var apane = $('#section_content div.tab-pane.active');
+		// var fpane = $('#section_content div.tab-pane').first();
+		// if (apane.get(0).id === fpane.get(0).id) {
+		// 	$('.previous').addClass('disabled');
+		// }
+		// else {
+		// 	$('.previous').removeClass('disabled');
+		// }
 };
 
 Template.survey_tabs.events({
-	'click .section-submit': function() {
+	'click .next-section-btn': function() {
 		var values = {};
 
 		function logArrayElements(element, index, array) {
@@ -164,7 +172,14 @@ Template.survey_tabs.events({
 		apane.removeClass('in active');
 		// $('#PersonalDetails').removeClass('in active');
 		apane.next().addClass('in active');
+		if (apane.ne)
 		// $('#PersonalDetails').next().addClass('in active');
 		return false;
+	},
+	'click .prev-section-btn': function() {
+		var apane = $('#section_content div.tab-pane.active');
+		apane.removeClass('in active');
+		apane.prev().addClass('in active');
+
 	}
 });

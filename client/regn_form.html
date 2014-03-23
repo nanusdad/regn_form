@@ -31,7 +31,7 @@
 	<div id="footer">
 		<div class="container">
 	  		<p class="text-muted">
-	     		<small>&copy / <a href="mailto:arun@zechariah.net">ajz design</a></small>
+	     		<small>&copy <a href="mailto:zeteo@zechariah.net">Zeteo</a></small>
 	    	</p>
 	  	</div>
   	</div>
@@ -103,7 +103,14 @@
 					{{/each}}
 					<div class="row clear">
 					</div>
-					<button id="submit_{{{section_id}}}" type="submit" class="btn btn-default pull-right section-submit">Submit</button> 
+
+
+					<ul class="pager">
+  						<li class="previous">
+  						<a href="#" class="prev-section-btn" type="submit">&larr; Previous</a></li>
+  						<li class="next">
+  						<a id="submit_{{{section_id}}}" href="#" class="next-section-btn" type="submit">Next &rarr;</a></li>
+					</ul>
 				</form>
 				</div>
 			{{/each}}
