@@ -102,6 +102,9 @@ var surveys = [{
 	}]
 }];
 
+// Get Answers collection
+Meteor.subscribe("answers");
+
 Template.main.email_verified = function() {
 	return Meteor.users.findOne({
 		_id: Meteor.userId()
@@ -184,6 +187,16 @@ Template.survey_tabs.events({
 
 		$('#pdform').serializeArray().forEach(logArrayElements);
 		console.log(values);
+
+		Meteor.call('insertAnswers', values, function(err, res) {
+			if (err) {
+        		console.log('cannot insert' + err);
+      		} 
+      		else {
+      			console.log('inserted' + res);
+      		}
+      	});
+
 		var apane = $('#section_content div.tab-pane.active');
 		console.log(apane);
 		apane.removeClass('in active');
@@ -197,9 +210,17 @@ Template.survey_tabs.events({
 		var npane = $('#survey_content div.tab-pane.fade.active.in div.active').next();
 		var ppane = $('#survey_content div.tab-pane.fade.active.in div.active').prev();
 
+		var atab = $('#survey_content div.tab-pane.fade.active.in ul.nav li.active');
+		var ntab = $('#survey_content div.tab-pane.fade.active.in ul.nav li.active').next();
+		var ptab = $('#survey_content div.tab-pane.fade.active.in ul.nav li.active').prev();
+
+		atab.removeClass('active');
+		ntab.addClass('active');
+
 		// if (npane.get(0).id === fpane.get(0).id) {
 		if (npane.get(0) !== undefined) {
 			$('.next').show();
+
 		} else {
 			$('.next').hide();
 		}
@@ -216,6 +237,13 @@ Template.survey_tabs.events({
 		var apane = $('#section_content div.tab-pane.active');
 		apane.removeClass('in active');
 		apane.prev().addClass('in active');
+
+		var atab = $('#survey_content div.tab-pane.fade.active.in ul.nav li.active');
+		var ntab = $('#survey_content div.tab-pane.fade.active.in ul.nav li.active').next();
+		var ptab = $('#survey_content div.tab-pane.fade.active.in ul.nav li.active').prev();
+
+		atab.removeClass('active');
+		ptab.addClass('active');
 
 		var npane = $('#survey_content div.tab-pane.fade.active.in div.active').next()
 		var ppane = $('#survey_content div.tab-pane.fade.active.in div.active').prev()
