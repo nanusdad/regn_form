@@ -8,5 +8,5 @@ autopublish
 insecure
 preserve-inputs
 accounts-password
-bootstrap-3
 accounts-ui-bootstrap-3
+bootstrap-3
