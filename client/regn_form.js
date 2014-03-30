@@ -81,7 +81,7 @@ var surveys = [{
 		section_id: "Education",
 		section_name: "Education",
 		questions: [{
-			question_id: 'S2C2Q1',
+			question_id: 'S3C1Q1',
 			question_type: 'text',
 			question_text: 'My Second Question',
 			question_col_size: 'col-md-12'
@@ -174,6 +174,18 @@ Template.survey_tabs.rendered = function() {
 	// 	//$('.previous').addClass('disabled');
 	// 	$('.previous').hide();
 	// }
+
+	function fillInputFields(element) {
+		console.log(element.name);
+		var el = element.name;
+		var a = Answers.findOne({user_id: Meteor.userId()});
+		var v = a[el];
+		console.log('setting ' + el + ' to ' + v);
+		$('#' + el).val(v);
+	}
+	// var tab_id = 'pdform_' + $('#section_content div.tab-pane.active').get(0).id;
+	// $('#' + tab_id).serializeArray().forEach(fillInputFields);
+	$('#pdform').serializeArray().forEach(fillInputFields);
 };
 
 Template.survey_tabs.events({
@@ -185,6 +197,8 @@ Template.survey_tabs.events({
 			values[element.name] = element.value;
 		}
 
+		// var tab_id = 'pdform_' + $('#section_content div.tab-pane.active').get(0).id;
+		// $('#' + tab_id).serializeArray().forEach(logArrayElements);
 		$('#pdform').serializeArray().forEach(logArrayElements);
 		console.log(values);
 
@@ -230,6 +244,19 @@ Template.survey_tabs.events({
 		} else {
 			$('.previous').hide();
 		}
+
+	// 	function fillInputFields(element) {
+	// 	console.log(element.name);
+	// 	var el = element.name;
+	// 	var a = Answers.findOne({user_id: Meteor.userId()});
+	// 	var v = a[el];
+	// 	console.log(v);
+	// 	$('#' + el).val(v);
+	// }
+	// var tab_id = 'pdform_' + $('#section_content div.tab-pane.active').next().get(0).id;
+	// $('#' + tab_id).serializeArray().forEach(fillInputFields);
+
+
 
 		return false;
 	},

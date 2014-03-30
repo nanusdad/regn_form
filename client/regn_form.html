@@ -73,11 +73,12 @@
 				<li><a href="#{{{section_id}}}" data-toggle="tab">{{section_name}}</a></li>
 			{{/each}}
 			</ul>
-
+			<form role="form" id="pdform">
 			<div id="section_content" class="tab-content col-md-10">
+			
 			{{#each sections}}
 				<div class="tab-pane" id="{{{section_id}}}">
-				<form role="form" id="pdform">
+				
  					{{#each questions}}
 					<div class="form-group {{{question_col_size}}} well well-lg">
  					{{#if isText question_type}}
@@ -108,10 +109,12 @@
   						<li class="next">
   						<a id="submit_{{{section_id}}}" href="#" class="next-section-btn" type="submit">Next &rarr;</a></li>
 					</ul>
-				</form>
+				
 				</div>
 			{{/each}}
+
 			</div>
+			</form>
   		</div>
   	{{/each}}
 	</div>
