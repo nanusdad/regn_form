@@ -1,107 +1,3 @@
-var surveys = [{
-	survey_name: "Questionnaire1",
-	sections: [{
-		section_id: "PersonalDetails",
-		section_name: "Personal Details",
-		questions: [{
-			question_id: 'S1C1Q1',
-			question_type: 'text',
-			question_text: 'Full Name',
-			question_placeholder: 'Enter Full Name',
-			question_col_size: 'col-md-6'
-		}, {
-			question_id: 'S1C1Q2',
-			question_type: 'text',
-			question_text: "Father's / Husband's Name",
-			question_placeholder: "Enter Father's / Husband's name",
-			question_col_size: 'col-md-6'
-		}, {
-			question_id: 'S1C1Q3',
-			question_type: 'radio',
-			question_text: "Sex",
-			question_radios: [{
-				rtext: "Male",
-				rval: "Male"
-			}, {
-				rtext: "Female",
-				rval: "Female"
-			}],
-			question_placeholder: "",
-			question_col_size: 'col-md-2'
-		}, {
-			question_id: 'S1C1Q4',
-			question_type: 'text',
-			question_text: "Age",
-			question_placeholder: "",
-			question_col_size: 'col-md-2'
-		}, {
-			question_id: 'S1C1Q5',
-			question_type: 'text',
-			question_text: "Religion",
-			question_placeholder: "",
-			question_col_size: 'col-md-4'
-		}, {
-			question_id: 'S1C1Q6',
-			question_type: 'text',
-			question_text: "Nationality",
-			question_placeholder: "Indian",
-			question_col_size: 'col-md-4'
-		}, {
-			question_id: 'S1C1Q7',
-			question_type: 'text',
-			question_text: "Birthdate",
-			question_placeholder: "dd/mm/yyyy",
-			question_col_size: 'col-md-12'
-
-		}, {
-			question_id: 'S1C1Q8',
-			question_type: 'text',
-			question_text: "MBBS Registration Number",
-			question_placeholder: "",
-			question_col_size: 'col-md-12'
-
-		}]
-
-	}, {
-		section_id: "ContactInfo",
-		section_name: "Contact Info",
-		questions: [{
-			question_id: 'S2C2Q1',
-			question_type: 'text',
-			question_text: 'Mailing Address',
-			question_col_size: 'col-md-12'
-		}, {
-			question_id: 'S2C2Q2',
-			question_type: 'text',
-			question_text: 'Permanent Address',
-			question_col_size: 'col-md-12'
-
-		}]
-	}, {
-		section_id: "Education",
-		section_name: "Education",
-		questions: [{
-			question_id: 'S3C1Q1',
-			question_type: 'text',
-			question_text: 'My Second Question',
-			question_col_size: 'col-md-12'
-		}]
-	}]
-}, {
-	survey_name: "Questionnaire2",
-	sections: [{
-		section_id: "Essay",
-		section_name: "Essay",
-		questions: [{
-			question_id: 'S2C2Q1',
-			question_type: 'text',
-			question_text: 'My Second Question',
-			question_col_size: 'col-md-12'
-		}]
-
-	}]
-}];
-
 // Get Answers collection
 Meteor.subscribe("answers");
 
@@ -140,6 +36,13 @@ Template.survey_tabs.helpers({
 		} else {
 			return false;
 		}
+	},
+	isPara: function(qfield) {
+		if (qfield === 'para') {
+			return true;
+		} else {
+			return false;
+		}
 	}
 });
 
@@ -157,7 +60,7 @@ Template.survey_tabs.rendered = function() {
 	var lpane = $('#survey_content div.tab-pane.fade.active.in div.tab-pane').last();
 
 	// This needs to happen on click of survey tab
-	
+
 	if (apane.get(0).id === fpane.get(0).id) {
 		console.log('rendering');
 		//$('.previous').addClass('disabled');
@@ -178,14 +81,56 @@ Template.survey_tabs.rendered = function() {
 	function fillInputFields(element) {
 		console.log(element.name);
 		var el = element.name;
-		var a = Answers.findOne({user_id: Meteor.userId()});
+		var a = Answers.findOne({
+			user_id: Meteor.userId()
+		});
 		var v = a[el];
 		console.log('setting ' + el + ' to ' + v);
 		$('#' + el).val(v);
+
+		if (element.type !== "radio") {
+			
+			$('#' + el).val(v);
+		}
+		else {
+			$('#' + v).prop('checked', true);
+		}
+		// var r = ($('#pdform input[type=radio]'));
+		// _.values(r).forEach(function(element) {
+		// 	if (element.type === "radio") {
+		// 		// var rval = $('#' + element.id + ':checked').val();
+		// 		console.log(element.name);
+		// 		console.log('radio field ' + element.name + ' set to ' + a[element.name]);
+
+		// 	}
+		// });
 	}
-	// var tab_id = 'pdform_' + $('#section_content div.tab-pane.active').get(0).id;
-	// $('#' + tab_id).serializeArray().forEach(fillInputFields);
-	$('#pdform').serializeArray().forEach(fillInputFields);
+
+
+	var answers = $('#pdform').serializeArray();
+
+	// Handle radio buttons
+
+	 var r = ($('#pdform input[type=radio]'));
+	 _.values(r).forEach(function(element) {
+	 	if (element.type === "radio") {
+			var rval = $('#' + element.id + ':checked').val();
+	// 		console.log(element.name);
+	// 		console.log('radio field ' + element.name);
+	// 			console.log('radio setting' + rval + ' to true');
+	// 			$('#' + rval).prop('checked', true);
+			
+			answers.push({
+				name: element.name,
+				type: 'radio'
+			});
+
+
+	 	}
+	 });
+	 console.log('render answers', answers);
+
+	answers.forEach(fillInputFields);
 };
 
 Template.survey_tabs.events({
@@ -200,16 +145,31 @@ Template.survey_tabs.events({
 		// var tab_id = 'pdform_' + $('#section_content div.tab-pane.active').get(0).id;
 		// $('#' + tab_id).serializeArray().forEach(logArrayElements);
 		$('#pdform').serializeArray().forEach(logArrayElements);
+
+		// Handle radio buttons
+
+		var r = ($('#pdform input[type=radio]'));
+		_.values(r).forEach(function(element) {
+			if (element.type === "radio") {
+				var rval = $('#' + element.id + ':checked').val();
+				console.log(element.name);
+				if (!_.isUndefined(rval)) {
+					values[element.id] = rval;
+				}
+
+			}
+		});
+
+
 		console.log(values);
 
 		Meteor.call('insertAnswers', values, function(err, res) {
 			if (err) {
-        		console.log('cannot insert' + err);
-      		} 
-      		else {
-      			console.log('inserted' + res);
-      		}
-      	});
+				console.log('cannot insert' + err);
+			} else {
+				console.log('inserted' + res);
+			}
+		});
 
 		var apane = $('#section_content div.tab-pane.active');
 		console.log(apane);
@@ -245,16 +205,16 @@ Template.survey_tabs.events({
 			$('.previous').hide();
 		}
 
-	// 	function fillInputFields(element) {
-	// 	console.log(element.name);
-	// 	var el = element.name;
-	// 	var a = Answers.findOne({user_id: Meteor.userId()});
-	// 	var v = a[el];
-	// 	console.log(v);
-	// 	$('#' + el).val(v);
-	// }
-	// var tab_id = 'pdform_' + $('#section_content div.tab-pane.active').next().get(0).id;
-	// $('#' + tab_id).serializeArray().forEach(fillInputFields);
+		// 	function fillInputFields(element) {
+		// 	console.log(element.name);
+		// 	var el = element.name;
+		// 	var a = Answers.findOne({user_id: Meteor.userId()});
+		// 	var v = a[el];
+		// 	console.log(v);
+		// 	$('#' + el).val(v);
+		// }
+		// var tab_id = 'pdform_' + $('#section_content div.tab-pane.active').next().get(0).id;
+		// $('#' + tab_id).serializeArray().forEach(fillInputFields);
 
 
 

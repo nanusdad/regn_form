@@ -95,6 +95,10 @@
 							  	</label>
 							</div>
 							{{/each}}
+						{{else}}
+							{{#if isPara question_type}}
+								<p id="{{{question_id}}}">{{question_text}}</p>
+							{{/if}}
 						{{/if}}
   					{{/if}}
   					</div>
