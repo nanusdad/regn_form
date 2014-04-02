@@ -19,6 +19,7 @@
 <template name="header">
 	<div class="page-header">
 		<h1>Registration Form</h1>
+
 		    <ul class="nav navbar-nav navbar-right">
 		      {{ loginButtons }} <!-- here -->
 		    </ul>
@@ -36,6 +37,14 @@
   	</div>
 </template>
 
+<template name="appl_submit_details">
+			{{#if submit_id}}
+			{{#with submit_id}}
+				<h4>Application ID: {{submit_id}}</h4>
+			{{/with}}
+		{{/if}}
+</template>
+
 <template name="landing_page">
 	<p class="lead">
 		Welcome to such and such page.
@@ -49,7 +58,10 @@
 <template name="main">
 
 	{{#if email_verified}}
+		{{> appl_submit_details}}
+
 		{{> survey_tabs}}
+
 	{{else}}
 	Verified : {{email_verified}}
 	<p class="lead">Please check your email and verify your identity. Thanks.</p>
@@ -60,20 +72,20 @@
 <template name="survey_tabs">
 	<ul id="survey_tabs" class="nav nav-tabs">
 	{{#each surveys}}
-  		<li><a href="#{{{survey_name}}}" data-toggle="tab">{{survey_name}}</a></li>
+  		<li><a href="#{{{survey_id}}}" data-toggle="tab">{{survey_name}}</a></li>
  	{{/each}}
 	</ul>
 
 	<!-- Tab panes -->
 	<div id="survey_content" class="tab-content">
 	{{#each surveys}}
-  		<div class="tab-pane fade" id="{{{survey_name}}}">
+  		<div class="tab-pane fade" id="{{{survey_id}}}">
  		  	<ul id="section_tabs" class="nav nav-pills nav-stacked col-md-2">
 			{{#each sections}}
 				<li><a href="#{{{section_id}}}" data-toggle="tab">{{section_name}}</a></li>
 			{{/each}}
 			</ul>
-			<form role="form" id="pdform">
+			<form role="form" id="pdform_{{{survey_id}}}">
 			<div id="section_content" class="tab-content col-md-10">
 			
 			{{#each sections}}

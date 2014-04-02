@@ -77,6 +77,8 @@ Template.survey_tabs.rendered = function() {
 		//$('.previous').addClass('disabled');
 		$('.next').hide();
 	}
+	var survey_id = $('#survey_content div.tab-pane.fade.in.active').get(0).id;
+	var pdform = '#pdform_' + survey_id;
 
 	function fillInputFields(element) {
 		console.log(element.name);
@@ -94,23 +96,19 @@ Template.survey_tabs.rendered = function() {
 		} else {
 			$('#' + v).prop('checked', true);
 		}
-		// var r = ($('#pdform input[type=radio]'));
-		// _.values(r).forEach(function(element) {
-		// 	if (element.type === "radio") {
-		// 		// var rval = $('#' + element.id + ':checked').val();
-		// 		console.log(element.name);
-		// 		console.log('radio field ' + element.name + ' set to ' + a[element.name]);
 
-		// 	}
-		// });
+		if (a.submitted === true) {
+			_.values($(pdform + ' input')).forEach(function(element) {
+				$('#' + element.id).prop('readonly', true)
+			});
+		}
 	}
 
-
-	var answers = $('#pdform').serializeArray();
+	var answers = $(pdform).serializeArray();
 
 	// Handle radio buttons
 
-	var r = ($('#pdform input[type=radio]'));
+	var r = ($(pdform + ' input[type=radio]'));
 	_.values(r).forEach(function(element) {
 		if (element.type === "radio") {
 			var rval = $('#' + element.id + ':checked').val();
@@ -162,8 +160,14 @@ Template.survey_tabs.events({
 
 		} else {
 			// $('.next').hide();
-			$('#section_content div.tab-pane.active .next').addClass("final_submit");
+
+			// $('#section_content div.tab-pane.active .next').addClass("alert alert-danger");
 			$('#section_content div.tab-pane.active .next a').html("Final Submit");
+			$('#section_content div.tab-pane.active .next a').removeClass('next-section-btn');
+			$('#section_content div.tab-pane.active .next a').addClass('final-submit-btn');
+			$('#section_content div.tab-pane.active .next a').addClass("alert alert-danger");
+
+			$('#section_content div.tab-pane.active .next').removeClass("next");
 			$('#section_content div.tab-pane.active .final_submit').show();
 		}
 
@@ -214,6 +218,8 @@ Template.survey_tabs.events({
 		console.log(this.sections[0].section_id);
 		var section_id = this.sections[0].section_id;
 		console.log($('#' + section_id + ' li'));
+		var survey_id = $('#survey_content div.tab-pane.fade.in.active').get(0).id;
+
 
 		var apane = $('#survey_content div.tab-pane.fade.active.in div.active');
 		var fpane = $('#survey_content div.tab-pane.fade.active.in div.tab-pane').first();
@@ -254,10 +260,46 @@ Template.survey_tabs.events({
 		}
 
 		// return false;
+	},
+	'click .final-submit-btn': function() {
+		console.log('final submit');
+		var survey_id = $('#survey_content div.tab-pane.fade.in.active').get(0).id;
+		var pdform = '#pdform_' + survey_id;
+
+		_.values($(pdform + ' input')).forEach(function(element) {
+			$('#' + element.id).prop('readonly', true)
+		});
+
+		if (!Answers.findOne().submit_id) {
+			var submission_id = Random.hexString(6);
+
+			var values = {
+				submitted: true,
+				submit_id: submission_id
+			};
+
+			Meteor.call('insertAnswers', values, function(err, res) {
+				if (err) {
+					console.log('cannot insert: ' + err);
+				} else {
+					console.log('inserted: ' + res);
+				}
+			});
+
+		}
+
+		return false;
 	}
 });
 
+Template.appl_submit_details.submit_id = function() {
+	var ret = false;
+	if (Answers.findOne().submit_id) {
+		ret = Answers.findOne().submit_id;
 
+	}
+	return ret;
+}
 Template.filepicker.events({
 	'click #uploadBtn': function(evt) {
 		filepicker.pick(function(InkBlob) {
@@ -282,19 +324,20 @@ Template.filepicker.events({
 });
 
 function save_form_vals() {
-	var values = {};
+
 	var form_vals = $('#section_content div.tab-pane.active div.form-group input').serializeArray();
-	_.map(form_vals, function(num) {
-		values[num.name] = num.value;
-	});
+
+	var values = _.object(_.map(form_vals, function(item) {
+		return [item.name, item.value]
+	}));
 
 	console.log(values);
 
 	Meteor.call('insertAnswers', values, function(err, res) {
 		if (err) {
-			console.log('cannot insert' + err);
+			console.log('cannot insert: ' + err);
 		} else {
-			console.log('inserted' + res);
+			console.log('inserted: ' + res);
 		}
 	});
 }
