@@ -134,44 +134,7 @@ Template.survey_tabs.rendered = function() {
 
 Template.survey_tabs.events({
 	'click .next-section-btn': function() {
-		var values = {};
-
-		// function logArrayElements(element, index, array) {
-		// 	// console.log("a[" + index + "] = " + JSON.stringify(element));
-		// 	values[element.name] = element.value;
-		// }
-
-		// var tab_id = 'pdform_' + $('#section_content div.tab-pane.active').get(0).id;
-		// $('#' + tab_id).serializeArray().forEach(logArrayElements);
-		// $('#pdform').serializeArray().forEach(logArrayElements);
-		// $('#section_content div.tab-pane.active div.form-group input').serializeArray().forEach(logArrayElements);
-		var form_vals = $('#section_content div.tab-pane.active div.form-group input').serializeArray();
-		_.map(form_vals, function(num){ values[num.name] = num.value; });
-
-		// Handle radio buttons
-
-		// var r = ($('#pdform input[type=radio]'));
-		// _.values(r).forEach(function(element) {
-		// 	if (element.type === "radio") {
-		// 		var rval = $('#' + element.id + ':checked').val();
-		// 		console.log(element.name);
-		// 		if (!_.isUndefined(rval)) {
-		// 			values[element.id] = rval;
-		// 		}
-
-		// 	}
-		// });
-
-
-		console.log(values);
-
-		Meteor.call('insertAnswers', values, function(err, res) {
-			if (err) {
-				console.log('cannot insert' + err);
-			} else {
-				console.log('inserted' + res);
-			}
-		});
+		save_form_vals();
 
 		var apane = $('#section_content div.tab-pane.active');
 		console.log(apane);
@@ -210,22 +173,10 @@ Template.survey_tabs.events({
 			$('.previous').hide();
 		}
 
-		// 	function fillInputFields(element) {
-		// 	console.log(element.name);
-		// 	var el = element.name;
-		// 	var a = Answers.findOne({user_id: Meteor.userId()});
-		// 	var v = a[el];
-		// 	console.log(v);
-		// 	$('#' + el).val(v);
-		// }
-		// var tab_id = 'pdform_' + $('#section_content div.tab-pane.active').next().get(0).id;
-		// $('#' + tab_id).serializeArray().forEach(fillInputFields);
-
-
-
 		return false;
 	},
 	'click .prev-section-btn': function() {
+		save_form_vals();
 		var apane = $('#section_content div.tab-pane.active');
 		apane.removeClass('in active');
 		apane.prev().addClass('in active');
@@ -258,7 +209,7 @@ Template.survey_tabs.events({
 		return false;
 
 	},
-	'click #survey_tabs li a': function(){
+	'click #survey_tabs li a': function() {
 		console.log('clicked');
 		console.log(this.sections[0].section_id);
 		var section_id = this.sections[0].section_id;
@@ -299,8 +250,10 @@ Template.survey_tabs.events({
 			console.log('rendering');
 			//$('.previous').addClass('disabled');
 			// $('.next').hide();
-			
+
 		}
+
+		// return false;
 	}
 });
 
@@ -327,3 +280,21 @@ Template.filepicker.events({
 		});
 	}
 });
+
+function save_form_vals() {
+	var values = {};
+	var form_vals = $('#section_content div.tab-pane.active div.form-group input').serializeArray();
+	_.map(form_vals, function(num) {
+		values[num.name] = num.value;
+	});
+
+	console.log(values);
+
+	Meteor.call('insertAnswers', values, function(err, res) {
+		if (err) {
+			console.log('cannot insert' + err);
+		} else {
+			console.log('inserted' + res);
+		}
+	});
+}
