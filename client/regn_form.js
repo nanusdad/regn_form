@@ -1,5 +1,13 @@
+// Start functions
+// Initialize filepicker
+Meteor.startup(function() {
+	filepicker.setKey('AMfJlBtH6RHWPiaNaVhO6z');
+	filepicker.constructWidget(document.getElementById('attachment'));
+});
+
 // Get Answers collection
 Meteor.subscribe("answers");
+
 
 Template.main.email_verified = function() {
 	return Meteor.users.findOne({
@@ -52,11 +60,8 @@ Template.survey_tabs.rendered = function() {
 	$('#survey_content div:first').addClass('in active');
 	$('#section_tabs li:first').addClass('active');
 	$('#section_content div:first').addClass('in active');
-	// var apane = $('#section_content div.tab-pane.active');
 	var apane = $('#survey_content div.tab-pane.fade.active.in div.active');
-	// var fpane = $('#section_content div.tab-pane').first();
 	var fpane = $('#survey_content div.tab-pane.fade.active.in div.tab-pane').first();
-	// $('#section_content div.tab-pane').last();
 	var lpane = $('#survey_content div.tab-pane.fade.active.in div.tab-pane').last();
 
 	// This needs to happen on click of survey tab
@@ -72,11 +77,6 @@ Template.survey_tabs.rendered = function() {
 		//$('.previous').addClass('disabled');
 		$('.next').hide();
 	}
-	// if (apane.get(0).id === fpane.get(0).id) {
-	// 	console.log('rendering');
-	// 	//$('.previous').addClass('disabled');
-	// 	$('.previous').hide();
-	// }
 
 	function fillInputFields(element) {
 		console.log(element.name);
@@ -89,10 +89,9 @@ Template.survey_tabs.rendered = function() {
 		$('#' + el).val(v);
 
 		if (element.type !== "radio") {
-			
+
 			$('#' + el).val(v);
-		}
-		else {
+		} else {
 			$('#' + v).prop('checked', true);
 		}
 		// var r = ($('#pdform input[type=radio]'));
@@ -111,24 +110,24 @@ Template.survey_tabs.rendered = function() {
 
 	// Handle radio buttons
 
-	 var r = ($('#pdform input[type=radio]'));
-	 _.values(r).forEach(function(element) {
-	 	if (element.type === "radio") {
+	var r = ($('#pdform input[type=radio]'));
+	_.values(r).forEach(function(element) {
+		if (element.type === "radio") {
 			var rval = $('#' + element.id + ':checked').val();
-	// 		console.log(element.name);
-	// 		console.log('radio field ' + element.name);
-	// 			console.log('radio setting' + rval + ' to true');
-	// 			$('#' + rval).prop('checked', true);
-			
+			// 		console.log(element.name);
+			// 		console.log('radio field ' + element.name);
+			// 			console.log('radio setting' + rval + ' to true');
+			// 			$('#' + rval).prop('checked', true);
+
 			answers.push({
 				name: element.name,
 				type: 'radio'
 			});
 
 
-	 	}
-	 });
-	 console.log('render answers', answers);
+		}
+	});
+	console.log('render answers', answers);
 
 	answers.forEach(fillInputFields);
 };
@@ -137,28 +136,31 @@ Template.survey_tabs.events({
 	'click .next-section-btn': function() {
 		var values = {};
 
-		function logArrayElements(element, index, array) {
-			// console.log("a[" + index + "] = " + JSON.stringify(element));
-			values[element.name] = element.value;
-		}
+		// function logArrayElements(element, index, array) {
+		// 	// console.log("a[" + index + "] = " + JSON.stringify(element));
+		// 	values[element.name] = element.value;
+		// }
 
 		// var tab_id = 'pdform_' + $('#section_content div.tab-pane.active').get(0).id;
 		// $('#' + tab_id).serializeArray().forEach(logArrayElements);
-		$('#pdform').serializeArray().forEach(logArrayElements);
+		// $('#pdform').serializeArray().forEach(logArrayElements);
+		// $('#section_content div.tab-pane.active div.form-group input').serializeArray().forEach(logArrayElements);
+		var form_vals = $('#section_content div.tab-pane.active div.form-group input').serializeArray();
+		_.map(form_vals, function(num){ values[num.name] = num.value; });
 
 		// Handle radio buttons
 
-		var r = ($('#pdform input[type=radio]'));
-		_.values(r).forEach(function(element) {
-			if (element.type === "radio") {
-				var rval = $('#' + element.id + ':checked').val();
-				console.log(element.name);
-				if (!_.isUndefined(rval)) {
-					values[element.id] = rval;
-				}
+		// var r = ($('#pdform input[type=radio]'));
+		// _.values(r).forEach(function(element) {
+		// 	if (element.type === "radio") {
+		// 		var rval = $('#' + element.id + ':checked').val();
+		// 		console.log(element.name);
+		// 		if (!_.isUndefined(rval)) {
+		// 			values[element.id] = rval;
+		// 		}
 
-			}
-		});
+		// 	}
+		// });
 
 
 		console.log(values);
@@ -196,7 +198,10 @@ Template.survey_tabs.events({
 			$('.next').show();
 
 		} else {
-			$('.next').hide();
+			// $('.next').hide();
+			$('#section_content div.tab-pane.active .next').addClass("final_submit");
+			$('#section_content div.tab-pane.active .next a').html("Final Submit");
+			$('#section_content div.tab-pane.active .final_submit').show();
 		}
 
 		if (ppane.get(0) !== undefined) {
@@ -252,5 +257,73 @@ Template.survey_tabs.events({
 
 		return false;
 
+	},
+	'click #survey_tabs li a': function(){
+		console.log('clicked');
+		console.log(this.sections[0].section_id);
+		var section_id = this.sections[0].section_id;
+		console.log($('#' + section_id + ' li'));
+
+		var apane = $('#survey_content div.tab-pane.fade.active.in div.active');
+		var fpane = $('#survey_content div.tab-pane.fade.active.in div.tab-pane').first();
+		var lpane = $('#survey_content div.tab-pane.fade.active.in div.tab-pane').last();
+
+
+		$('#survey_tabs li.active').removeClass('active');
+		$('#section_tabs li.active').removeClass('active');
+		$('#section_content div.tab-pane.active').removeClass('in active');
+		// $('#' + section_id + ' li').addClass('active');
+		// $('#' + section_id + ' li').next().removeClass('active');
+		// $('#section_content div:active').removeClass('in active');
+		// $('#' + section_id).addClass('in active');
+		// $('#section_content div:active').removeClass('in active');
+		// ('#section_content div.tab-pane').first();
+		// this.addClass('in active');
+		// $(this + '#section_tabs li:first').addClass('active');
+		// $('#survey_content div').addClass('in active')
+		// $('#section_tabs li:active').addClass('active');
+		// $('#section_content div:active').addClass('in active');
+		// 	var apane = $('#survey_content div.tab-pane.fade.active.in div.active');
+		// var fpane = $('#survey_content div.tab-pane.fade.active.in div.tab-pane').first();
+		// var lpane = $('#survey_content div.tab-pane.fade.active.in div.tab-pane').last();
+
+		// This needs to happen on click of survey tab
+
+		if (apane.get(0).id === fpane.get(0).id) {
+			console.log('rendering');
+			//$('.previous').addClass('disabled');
+			$('.previous').hide();
+		}
+
+		if (apane.get(0).id === lpane.get(0).id) {
+			console.log('rendering');
+			//$('.previous').addClass('disabled');
+			// $('.next').hide();
+			
+		}
+	}
+});
+
+
+Template.filepicker.events({
+	'click #uploadBtn': function(evt) {
+		filepicker.pick(function(InkBlob) {
+			console.log('inside' + hdesc);
+			var url = InkBlob.url;
+			var hrec = {
+				userid: Meteor.userId(),
+				imgurl: url,
+				checked: true
+			};
+			console.log(JSON.stringify(hrec));
+			Meteor.call('insertHfile', hrec, function(err, res) {
+				if (err) {
+					console.log('Failed to set ', hrec);
+				} else if (res) {
+					console.log('Updating ', hrec);
+				}
+			});
+
+		});
 	}
 });
