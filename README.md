@@ -1,3 +1,3 @@
 regn_form
 =========
-#### Basic Registration From using Meteor JS ####
+#### Basic Registration Form using Meteor JS ####
