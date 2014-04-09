@@ -1,8 +1,8 @@
 // Start functions
 // Initialize filepicker
 Meteor.startup(function() {
-	filepicker.setKey('AMfJlBtH6RHWPiaNaVhO6z');
-	filepicker.constructWidget(document.getElementById('attachment'));
+	 filepicker.setKey('AMfJlBtH6RHWPiaNaVhO6z');
+	 filepicker.constructWidget(document.getElementById('attachment'));
 });
 
 // Get Answers collection
@@ -51,6 +51,13 @@ Template.survey_tabs.helpers({
 		} else {
 			return false;
 		}
+	},
+	isFilePicker: function(qfield) {
+		if (qfield === 'filepicker') {
+			return true;
+		} else {
+			return false;
+		}
 	}
 });
 
@@ -86,22 +93,27 @@ Template.survey_tabs.rendered = function() {
 		var a = Answers.findOne({
 			user_id: Meteor.userId()
 		});
-		var v = a[el];
-		console.log('setting ' + el + ' to ' + v);
-		$('#' + el).val(v);
 
-		if (element.type !== "radio") {
+		if (!(a === undefined)) {
+			var v = a[el];
 
+			console.log('setting ' + el + ' to ' + v);
 			$('#' + el).val(v);
-		} else {
-			$('#' + v).prop('checked', true);
-		}
 
-		if (a.submitted === true) {
-			_.values($(pdform + ' input')).forEach(function(element) {
-				$('#' + element.id).prop('readonly', true)
-			});
+			if (element.type !== "radio") {
+
+				$('#' + el).val(v);
+			} else {
+				$('#' + v).prop('checked', true);
+			}
+
+			if (a.submitted === true) {
+				_.values($(pdform + ' input')).forEach(function(element) {
+					$('#' + element.id).prop('readonly', true)
+				});
+			}
 		}
+	
 	}
 
 	var answers = $(pdform).serializeArray();
@@ -294,25 +306,30 @@ Template.survey_tabs.events({
 
 Template.appl_submit_details.submit_id = function() {
 	var ret = false;
-	if (Answers.findOne().submit_id) {
-		ret = Answers.findOne().submit_id;
-
+	if (!(Answers.findOne({}) === undefined)) {
+		if (Answers.findOne().submit_id) {
+			ret = Answers.findOne().submit_id;
+		}
 	}
 	return ret;
-}
+};
+
 Template.filepicker.events({
-	'click #uploadBtn': function(evt) {
+	'click .uploadBtn': function() {
+		console.log('clicked filepicker');
+		field_id = this.question_id;
+		field_name = this.question_text;
+		console.log('outside' + field_id);
 		filepicker.pick(function(InkBlob) {
-			console.log('inside' + hdesc);
 			var url = InkBlob.url;
-			var hrec = {
-				userid: Meteor.userId(),
-				imgurl: url,
-				checked: true
-			};
-			console.log(JSON.stringify(hrec));
-			Meteor.call('insertHfile', hrec, function(err, res) {
-				if (err) {
+			console.log('inside' + url);
+			var hrec = {};
+			hrec[field_id] = url;
+			console.log(hrec);
+					$('#' + field_id).prop("disabled", true);
+					$('#' + field_id).html('Already uploaded ' + field_name);
+			Meteor.call('insertAnswers', hrec, function(err, res) {
+			 	if (err) {
 					console.log('Failed to set ', hrec);
 				} else if (res) {
 					console.log('Updating ', hrec);
@@ -320,7 +337,9 @@ Template.filepicker.events({
 			});
 
 		});
+		return false;
 	}
+
 });
 
 function save_form_vals() {

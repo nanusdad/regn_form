@@ -31,18 +31,18 @@
 	<div id="footer">
 		<div class="container">
 	  		<p class="text-muted">
-	     		<small>&copy <a href="mailto:az@gozeteo.com">Zeteo</a></small>
+	     		<small>&copy <a href="mailto:arun@gozeteo.com">Zeteo</a></small>
 	    	</p>
 	  	</div>
   	</div>
 </template>
 
 <template name="appl_submit_details">
-			{{#if submit_id}}
-			{{#with submit_id}}
-				<h4>Application ID: {{submit_id}}</h4>
-			{{/with}}
-		{{/if}}
+	{{#if submit_id}}
+		{{#with submit_id}}
+			<h4>Application ID: {{submit_id}}</h4>
+		{{/with}}
+	{{/if}}
 </template>
 
 <template name="landing_page">
@@ -110,6 +110,19 @@
 						{{else}}
 							{{#if isPara question_type}}
 								<p id="{{{question_id}}}">{{question_text}}</p>
+							{{else}}
+								{{#if isCheckBox question_type}}
+									{{#each question_checkboxes}}
+									<div class="{{{../question_type}}}" id="{{{../question_id}}}">
+									<input type="{{{../question_type}}" name="{{{../question_name}}} value="{{{rval}}}>
+									{{rtext}}</input>
+									</div>
+									{{/each}}
+								{{else}}
+									{{#if isFilePicker question_type}}
+										{{> filepicker}}}
+									{{/if}}
+								{{/if}}
 							{{/if}}
 						{{/if}}
   					{{/if}}
@@ -143,11 +156,9 @@
 
 
 <template name="filepicker">
-      <div class="list card">
-        <label class="item item-input item-stacked-label">
-          <span class="input-label">Description</span>
-          <input id="hrec_desc" type="text" placeholder="Doc visit in BLR">
-        </label>
-      <a id="uploadBtn" href="/" class="button button-full button-positive">Upload !</a>
-      </div>
+      <div class="{{{question_type}}}">
+		<label class="radio-inline">
+      		<button id="{{{question_id}}}" class="uploadBtn button button-full button-positive">Upload {{question_text}}!</button>
+		</label>
+	</div>
 </template>
