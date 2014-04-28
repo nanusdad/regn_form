@@ -283,7 +283,8 @@ Template.survey_tabs.events({
 		});
 
 		if (!Answers.findOne().submit_id) {
-			var submission_id = Random.hexString(6);
+			// var submission_id = Random.hexString(6);
+			var submission_id = $('#S1C1Q8').val();
 
 			var values = {
 				submitted: true,
