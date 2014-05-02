@@ -20,10 +20,14 @@
 	<div class="page-header">
 			<div class="row">
 				<div class="col-md-3">
-					<img src="emb.gif" width="150" align="center" />
+					<img src="logo.jpg" width="150" align="center" />
 				</div>
-				<div class="col-md-9">
-					<h1>CMC Vellore Distance Education Application Form</h1>
+				<div class="col-md-9 text-center">
+					<table class="table" style="">
+					<tr style="padding-bottom: 2px;"><td style="padding-top: 1px; padding-bottom: 1px; font-size:25px; color:navy; font-family:times; font-weight:bold; border-top-color:transparent">CHRISTIAN MEDICAL COLLEGE</td></tr>
+					<tr style="b"><td style="font-size:25px; color:navy; font-family:times; font-weight:bold; border-top-color:transparent">VELLORE - 632 004, TAMIL NADU, INDIA</td></tr>
+					<tr><td style="font-size:25px;font-family:times; font-weight:bold; border-top-color:transparent">DEPARTMENT OF DISTANCE EDUCATION</td></td>
+					</table>
 				</div>
 			</div>
 
@@ -52,10 +56,25 @@
 </template>
 
 <template name="landing_page">
-	<p class="lead">
-		Welcome to the continuation of the application form for Family Medicine course with the CMC Vellore Distance Education department.
+	<p class="text-center">
+		Welcome to the Step 2 of the M. Med in Family Medicine Application 2014!
 	</p>
-	<p>  If this is your first visit to this page - you will need to sign-up and verify your email address by clicking on the link that will be emailed to you.  ( Please use the same email address provided in the application page already completed ). Once you have verified your email - please login by clicking the link on top right.
+	<p>
+		If you have already created an account. Please Sign In to continue to fill the details. 
+	</p>
+	<p>  
+	If this is your first visit to this page -
+	<ul>
+		<li> You will need to create an account. Click ‘Create an Account’ and enter your email id and a password (Please use the same email address provided in the application page already completed).</li>
+		<li> An email will be sent to your email id to verify your email address. </li>
+		<li> Sign in to your email and verify your email address by clicking an the link that is emailed to you. This link will take you to the Step 2 page of the applicatinn process.</li>
+		<li> Please fill in your details in the 3 tabs — Confirm Details. Case Vignettes & Practice portfolios. The instruction for each tab is available under respective tab.</li> 
+		<li> You have the option to save your filled details at any point of time by clicking the ‘Save for Future’ option underneath each page and can continue with the filling the details.</li>
+	</ul>
+	</p>
+	<p style="color:red">
+
+	Your application for the M. Med in Family Medicine 2014 will be complete ONLY after having successfully completed the Stage 2.
 	</p>
 </template>
 
@@ -80,7 +99,7 @@
 <template name="survey_tabs">
 	<ul id="survey_tabs" class="nav nav-tabs">
 	{{#each surveys}}
-  		<li><a href="#{{{survey_id}}}" data-toggle="tab">{{survey_name}}</a></li>
+		<li style="font-weight:bold"><a href="#{{{survey_id}}}" data-toggle="tab">{{survey_name}}</a></li>
  	{{/each}}
 	</ul>
 
@@ -90,7 +109,7 @@
   		<div class="tab-pane fade" id="{{{survey_id}}}">
  		  	<ul id="section_tabs" class="nav nav-pills nav-stacked col-md-2">
 			{{#each sections}}
-				<li><a href="#{{{section_id}}}" data-toggle="tab">{{section_name}}</a></li>
+				<li><a href="#{{{section_id}}}" data-toggle="tab">{{section_name}}</li>
 			{{/each}}
 			</ul>
 			<form role="form" id="pdform_{{{survey_id}}}">
@@ -141,9 +160,10 @@
 
 
 					<ul class="pager">
-  						<li class="previous">
+  						<li class="previous" style="font-weight:bold">
   						<a href="#" class="prev-section-btn" type="submit">&larr; Previous</a></li>
-  						<li class="next">
+  						<li><button id="save_for_future" class="btn btn-default btn-primary">Save for future</button></li>
+  						<li class="next" style="font-weight:bold">
   						<a id="submit_{{{section_id}}}" href="#" class="next-section-btn" type="submit">Next &rarr;</a></li>
 					</ul>
 				

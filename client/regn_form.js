@@ -1,8 +1,8 @@
 // Start functions
 // Initialize filepicker
 Meteor.startup(function() {
-	 filepicker.setKey('AMfJlBtH6RHWPiaNaVhO6z');
-	 filepicker.constructWidget(document.getElementById('attachment'));
+	filepicker.setKey('AMfJlBtH6RHWPiaNaVhO6z');
+	filepicker.constructWidget(document.getElementById('attachment'));
 });
 
 // Get Answers collection
@@ -113,7 +113,7 @@ Template.survey_tabs.rendered = function() {
 				});
 			}
 		}
-	
+
 	}
 
 	var answers = $(pdform).serializeArray();
@@ -302,6 +302,35 @@ Template.survey_tabs.events({
 		}
 
 		return false;
+	},
+	'click #save_for_future': function() {
+		$('#save_for_future').removeClass('btn-primary');
+		$('#save_for_future').html('Saved !!')
+		$('#save_for_future').addClass('btn-success');
+		return false;
+
+	},
+	'click #S4C0Q1 label #No': function() {
+		$('#submit_PracticeStatus').html("Final Submit");
+		$('#submit_PracticeStatus').removeClass('next-section-btn');
+		$('#submit_PracticeStatus').addClass('final-submit-btn');
+		$('#submit_PracticeStatus').addClass("alert alert-danger");
+
+		$('#submit_PracticeStatus').removeClass("next");
+		$('#submit_PracticeStatus').show();
+		$('#save_for_future').attr('hidden', true);
+	},
+	'click #S4C0Q1 label #Yes': function() {
+		$('#submit_PracticeStatus').addClass("next");
+		$('#submit_PracticeStatus').addClass("next-section-btn");
+		$('#submit_PracticeStatus').html("Next &rarr;");
+		$('#submit_PracticeStatus').removeClass("alert alert-danger");
+		$('#submit_PracticeStatus').removeClass('final-submit-btn');
+
+
+		$('#submit_PracticeStatus').show();
+
+
 	}
 });
 
@@ -327,10 +356,10 @@ Template.filepicker.events({
 			var hrec = {};
 			hrec[field_id] = url;
 			console.log(hrec);
-					$('#' + field_id).prop("disabled", true);
-					$('#' + field_id).html('Already uploaded ' + field_name);
+			$('#' + field_id).prop("disabled", true);
+			$('#' + field_id).html('Already uploaded ' + field_name);
 			Meteor.call('insertAnswers', hrec, function(err, res) {
-			 	if (err) {
+				if (err) {
 					console.log('Failed to set ', hrec);
 				} else if (res) {
 					console.log('Updating ', hrec);
