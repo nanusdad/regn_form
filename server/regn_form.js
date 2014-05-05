@@ -43,3 +43,15 @@ Meteor.methods({
 	}
 
 });
+
+
+Accounts.emailTemplates.siteName = "CMC Dist Edu";
+Accounts.emailTemplates.from = "CMC Dist Edu Admin <admin@cmcdistedu.org>";
+Accounts.emailTemplates.verifyEmail.subject = function (user) {
+    return "Welcome to CMC Dist Edu";
+};
+Accounts.emailTemplates.verifyEmail.text = function (user, url) {
+   return "Thank you for registering for step 2 of Family Med application.!\n\n"
+     + " To activate your account, simply click the link below:\n\n"
+     + url;
+};
