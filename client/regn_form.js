@@ -1,11 +1,12 @@
 // Start functions
 // Initialize filepicker
 Meteor.startup(function() {
-	filepicker.setKey('AMfJlBtH6RHWPiaNaVhO6z');
-	filepicker.constructWidget(document.getElementById('attachment'));
+	// filepicker.setKey('AMfJlBtH6RHWPiaNaVhO6z');
+	// filepicker.constructWidget(document.getElementById('attachment'));
 });
 
-// Get Answers collection
+// Get Surveys and Answers collection
+Meteor.subscribe("surveys");
 Meteor.subscribe("answers");
 
 
@@ -20,7 +21,8 @@ Template.main.email_verified = function() {
 };
 
 Template.survey_tabs.surveys = function() {
-	return surveys;
+	//return surveys;
+	return Surveys.find({});
 };
 
 Template.survey_tabs.helpers({
@@ -318,6 +320,7 @@ Template.survey_tabs.events({
 
 		$('#submit_PracticeStatus').removeClass("next");
 		$('#submit_PracticeStatus').show();
+		$('#submit_PracticeStatus').tooltip({"data-toggle": "tooltip", "title": '<p class="bg-warning text-warning">This is the final submit button. You cannot change any answers. Please be sure before clicking this button.</p>', "data-placement": "top", "html": "true"})
 		$('#save_for_future').attr('hidden', true);
 	},
 	'click #S4C0Q1 label #Yes': function() {

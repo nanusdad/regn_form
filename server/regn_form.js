@@ -1,3 +1,16 @@
+Meteor.startup(function() {
+	console.log('we are here ooo');
+		console.log(Surveys.find().count());
+	if(Surveys.find().count() === 0) {
+		console.log('we are here');
+		console.log(init_surveys);
+		init_surveys.forEach(function (element) {
+			Surveys.insert(element);
+		});
+	}
+});
+
+
 Meteor.publish('answers', function() {
 	console.log(this.userId);
 	return Answers.find({
@@ -5,6 +18,9 @@ Meteor.publish('answers', function() {
 	});
 });
 
+Meteor.publish('surveys', function() {
+	return Surveys.find({});
+});
 
 Meteor.methods({
 
