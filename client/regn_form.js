@@ -334,7 +334,12 @@ Template.survey_tabs.events({
 		$('#submit_PracticeStatus').show();
 
 
+	},
+	'click .final-submit-btn': function() {
+		console.log('clicked final submit btn');
+		alert('Your application is now complete. Please logout.');
 	}
+
 });
 
 Template.appl_submit_details.submit_id = function() {
